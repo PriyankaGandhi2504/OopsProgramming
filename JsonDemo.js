@@ -55,7 +55,7 @@ function performOperation(inventoryNumber) {
             numberOfEntries = read.questionInt()
             for (let i = 0; i < numberOfEntries; i++) {
                 array[i] = userInput(dummyvariable)
-                myJson.Rice.push(array)
+                // myJson.Rice.push(array)
             }
             console.log("Inventory : " + JSON.stringify(myJson));
 
@@ -66,7 +66,7 @@ function performOperation(inventoryNumber) {
             numberOfEntries = read.questionInt()
             for (let i = 0; i < numberOfEntries; i++) {
                 array[i] = userInput(dummyvariable)
-                myJson.Rice.push(array)
+                // myJson.Rice.push(array)
             }
             console.log("Inventory : " + JSON.stringify(myJson));
             break
@@ -83,7 +83,7 @@ function performOperation(inventoryNumber) {
 }
 
 function userInput(dummyvariable) {
-    console.log("Enter" + dummyvariable + " Name ");
+    console.log("Enter " + dummyvariable + " Name ");
     name = read.question()
     array.push(name)
     console.log("Enter " + dummyvariable + " weight ");
@@ -95,15 +95,12 @@ function userInput(dummyvariable) {
     total = weight * pricePerKg
     array.push(total)
     // total = rice.totalQuantity(weight, pricePerKg)
-console.log();
-
     updateValues(dummyvariable, array)
 
 }
 
 function updateValues(dummyvariable, array) {
-    console.log("Array Values " + JSON.stringify(array));
-    
+    // console.log("Array Values " + JSON.stringify(array));
     var display;
     switch (dummyvariable) {
         case "Rice":
@@ -111,17 +108,17 @@ function updateValues(dummyvariable, array) {
             myJson.Rice.push(display)
             // myJson.Rice.push(total)
             console.log("Inventory : " + JSON.stringify(myJson));
-            console.log("Array " + JSON.stringify(display) + " " + "Total Quantity " + total);
+            // console.log("Array " + JSON.stringify(display) + " " + "Total Quantity " + total);
             break
         case "Wheats":
-            display = new wheatClass.Wheats(array.name, array.weight, array.pricePerKg, array.total)
+            display = new wheatClass.Wheats(array[0], array[1], array[2], array[3])
             myJson.Wheats.push(display)
             // myJson.Rice.push(total)
             console.log("Inventory : " + JSON.stringify(myJson));
             // console.log("Array " + display + " " + "Total Quantity " + total);
             break
         case "Pulses":
-            display = new pulseClass.Pulses(array.name, array.weight, array.pricePerKg, array.total)
+            display = new pulseClass.Pulses(array[0], array[1], array[2], array[3])
             myJson.Pulses.push(display)
             // myJson.Rice.push(total)
             console.log("Inventory : " + JSON.stringify(myJson));

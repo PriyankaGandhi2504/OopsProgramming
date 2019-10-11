@@ -1,3 +1,10 @@
+const read = require("readline-sync")
+const fs = require('fs')
+var doctor = fs.readFileSync('Doctor.json', 'utf8')
+var doctorJson = JSON.parse(doctor)
+var patient = fs.readFileSync('Patient.json', 'utf8')
+var patientJson = JSON.parse(patient)
+
 var methods = {}
 
 methods.input = function () {
@@ -34,12 +41,7 @@ methods.writeToFile = function () {
 
 
 methods.doctorUserInput = function () {
-    const read = require("readline-sync")
-    const fs = require('fs')
-    var doctor = fs.readFileSync('Doctor.json', 'utf8')
-    var doctorJson = JSON.parse(doctor)
     var doctorClassTemp = require("./DoctorClass")
-    var doctorClass = new doctorClassTemp.Doctor
     var array = []
     var name = read.question("Enter Doctor's Name :-> ")
     if (this.enterString(name)) {
@@ -50,8 +52,10 @@ methods.doctorUserInput = function () {
             if (availability === 'am' || availability === 'pm' || availability === 'both') {
                 var object = new doctorClassTemp.Doctor(name, id, specialization, availability)
                 doctorJson.Doctor.push(object)
+                fs.writeFileSync('Doctor.json', JSON.stringify(doctorJson), (err) => {
+                    console.log(doctorJson);
+                })
                 console.log("Doctor Json Data From utility " + JSON.stringify(doctorJson));
-
             } else {
                 console.log("Please Enter Valid Input : ");
                 this.doctorUserInput()
@@ -60,7 +64,6 @@ methods.doctorUserInput = function () {
             console.log("Please Enter Valid Input : ");
             this.doctorUserInput()
         }
-
     } else {
         console.log("Please Enter Valid Input : ");
         this.doctorUserInput()
@@ -70,32 +73,96 @@ methods.doctorUserInput = function () {
 
 
 methods.patientUserInput = function () {
-    const read = require("readline-sync")
-    const fs = require('fs')
-    var patient = fs.readFileSync('Patient.json', 'utf8')
-    var patientJson = JSON.parse(patient)
     var patientClassTemp = require("./PatientClass")
-    var patientClass = new patientClassTemp.Patient
-    var array = []
-    var name = read.question("Enter Patient's Name :-> ")
-    if (this.enterString(name)) {
-        var id = read.questionInt("Enter Patient's ID :-> ")
-        var mobileNumber = read.questionInt("Enter Patient's Mobile Number :-> ")
-        if (mobileNumber.toString().length == 10) {
-            var age = read.questionInt("Enter Patient's Age : -> ")
-            var object = new patientClassTemp.Patient(name, id, mobileNumber, age)
-            patientJson.Patient.push(object)
-            console.log("Patient Json Data From utility " + JSON.stringify(patientJson));
+    // var patientClass = new patientClassTemp.Patient
+    var array = []; var count = 0;
+    // if (count < 5) {
+        // console.log("Patient Json " + patientJson.Patient);
+        var name = read.question("Enter Patient's Name :-> ")
+       
+        if (this.enterString(name)) {
+            var id = read.questionInt("Enter Patient's ID :-> ")
+            var mobileNumber = read.questionInt("Enter Patient's Mobile Number :-> ")
+            if (mobileNumber.toString().length == 10) {
+                var age = read.questionInt("Enter Patient's Age : -> ")
+                var object = new patientClassTemp.Patient(name, id, mobileNumber, age)
+                patientJson.Patient.push(object)
+                fs.writeFileSync('Patient.json', JSON.stringify(patientJson), (err) => {
+                    console.log(patientJson);
+                })
+                console.log("Patient Json Data From utility " + JSON.stringify(patientJson));
+               
+            } else {
+                console.log("Please Enter Valid 10 Digit Mobile Number : ");
+                this.patientUserInput()
+            }
+
         } else {
-            console.log("Please Enter Valid 10 Digit Mobile Number : ");
+            console.log("Please Enter Valid Input : ");
             this.patientUserInput()
         }
+        // count++
+    // } else {
+    //     var date = new Date()
+    //     var currentDate = date.getDate() + 1
+    //     var currentMonth = date.getMonth() + 1
+    //     var currentYear = date.getFullYear()
+    //     console.log("Appointment will be scheduled for Tomorrow " + currentDate + "/" + currentMonth + "/" + currentYear);
+    //     var scheduleOption = read.questionInt("To continue Press 1");
+    //     if (scheduleOption == 1) {
+    //         patientDetailsArray = thispatientUserInput()
+    //     }
+    // }
 
-    } else {
-        console.log("Please Enter Valid Input : ");
-        this.patientUserInput()
-    }
+   
+    
     return patientJson
+}
+
+methods.allocateDoctor = function(doctorInfo){
+    // var count = 0
+    var doctorDetail = doctorJson.Doctor
+    // console.log("Doctor Details " + JSON.stringify(doctorDetail));
+    for(let i = 0; i < doctorDetail.length ; i++){
+        if(doctorDetail[i].name == doctorInfo){
+            console.log("Doctor's Details " + JSON.stringify(doctorDetail[i]));
+            // count++
+        }else if(doctorDetail[i].id == doctorInfo){
+            console.log("Doctor's Details " + JSON.stringify(doctorDetail[i]));
+            // count++
+        }else if(doctorDetail[i].specialization == doctorInfo){
+            console.log("Doctor's Details " + JSON.stringify(doctorDetail[i]));
+        }
+            // count++
+        // }else{
+        //     console.log("Please Enter Valid Input");
+        //     var doctorInfo = read.question("Enter Doctor's Name/Id/Specialization to schedule an appointment : \n");
+        //     this.allocateDoctor(doctorInfo)
+        // }
+    }
+    // return count
+}
+
+methods.searchPatient = function(patientInfo){
+    var patientDetail = patientJson.Patient
+// console.log("Patient Array : " + JSON.stringify(patientJson));
+
+    for(let i = 0; i < patientDetail.length; i++) {
+            // console.log("Print Name " + patientDetail[i].name);
+            if(patientDetail[i].name == patientInfo){
+                console.log("Patient's Details " + JSON.stringify(patientDetail[i]))
+            }else if(patientDetail[i].id == patientInfo){
+                console.log("Patient's Details " + JSON.stringify(patientDetail[i]))
+            }else if(patientDetail[i].mobileNumber == patientInfo){
+                console.log("Patient's Details " + JSON.stringify(patientDetail[i]))
+            }
+        }
+}
+
+methods.readFile = function(path){
+    const fs = require('fs')
+    var jsonObject = fs.readFileSync(path)
+    return JSON.parse(jsonObject)
 }
 
 // methods.replaceName = function (reg1, reg2, name) {

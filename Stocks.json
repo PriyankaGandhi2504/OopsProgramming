@@ -1,1 +1,1 @@
-{"Stocks":[]}
+{"Stocks":[[{"name":"abc","numberOfShare":5,"sharePrice":10,"total":50},{"name":"xyz","numberOfShare":5,"sharePrice":2,"total":10}],[{"name":"abc","numberOfShare":5,"sharePrice":2,"total":10},{"name":"xyz","numberOfShare":40,"sharePrice":2,"total":80}],[{"name":"abc","numberOfShare":5,"sharePrice":2,"total":10},{"name":"xyz","numberOfShare":40,"sharePrice":2,"total":80}]]}

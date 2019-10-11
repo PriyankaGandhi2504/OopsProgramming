@@ -10,79 +10,103 @@ const read = require("readline-sync")
 const fs = require('fs')
 var addressbook = require("./AddressClass")
 addressClass = new addressbook.AddressBook
-var address = fs.readFileSync('AddressJson.json', 'utf8')
-var myJson = JSON.parse(address)
 
 var firstName; var numberOfPeople; var lastName; var address; var city;
 var state; var zipCode; var phoneNumber; var array = []; var object;
-var deleteKey; var deleteRecord; var searchRecord; var personRecord = [];
+var deleteKey; var deleteRecord; var searchRecord; var personRecord = []; var myJson;
 
-numberOfPeople = read.questionInt("Enter total number of people : ");
+function readFromFile(){
+    var address = fs.readFileSync('AddressJson.json', 'utf8')
+    myJson = JSON.parse(address)
+}
 
-userInput(numberOfPeople)
+displayOptions()
 
-function userInput(numberOfPeople) {
-    for (let i = 0; i < numberOfPeople; i++) {
-        firstName = read.question("Enter Your First Name : \n")
-        let temp = input.data.enterString(firstName)
+function displayOptions() {
+    console.log("Select an Option ");
+    console.log("1. Add Entry to Address Book ");
+    console.log("2. View Address Book ");
+    console.log("3. Delete an address from Address Book ");
+    var switchOption = read.questionInt()
+    performOperation(switchOption)
+}
+
+function performOperation(switchOption) {
+    switch (switchOption) {
+        case 1:
+            userInput()
+            break
+        case 2:
+            readFromFile()
+            console.log(myJson);
+            break
+        case 3:
+            deleteKey = read.question("Enter First Name of the record to be deleted : \n")
+            deleteData(myJson, deleteKey)
+            break
+        default:
+            console.log("Invalid Input");
+    }
+    var continueSwitch = read.questionInt("Do You Want To Continue, then Press 1 else press any key to exit \n")
+    if (continueSwitch == 1) {
+        displayOptions()
+    }
+}
+
+
+
+
+function userInput() {
+    firstName = read.question("Enter Your First Name : \n")
+    let temp = input.data.enterString(firstName)
+    if (temp == true) {
+        lastName = read.question("Enter Your Last Name : \n")
+        let temp = input.data.enterString(lastName)
         if (temp == true) {
-            lastName = read.question("Enter Your Last Name : \n")
-            let temp = input.data.enterString(lastName)
-            if (temp == true) {
-                address = read.question("Enter Your Address : \n")
-                city = read.question("Enter Your City : \n")
-                let tempVar = input.data.enterString(city)
-                if (tempVar == true) {
-                    state = read.question("Enter Your State : \n")
-                    let temp = input.data.enterString(state)
-                    if (temp == true) {
-                        zipCode = read.questionInt("Enter Zip Code : \n")
-
-                        if (zipCode.toString().length === 6) {
-                            phoneNumber = read.questionInt("Enter Your Phone Number : \n")
-                            if (phoneNumber.toString().length == 10) {
-
-                                var object = new addressbook.AddressBook(firstName, lastName, address, city, state, zipCode, phoneNumber)
-                                // console.log("Object Returns: " + JSON.stringify(object));
-                                
-                                // object = {
-                                //     "FirstName": firstName,
-                                //     "LastName": lastName,
-                                //     "Address": address,
-                                //     "City": city,
-                                //     "State": state,
-                                //     "ZipCode": zipCode,
-                                //     "PhoneNumber": phoneNumber
-                                // }
-                                myJson.AddressBook.push(object)
-                                console.log("Object Data : " + JSON.stringify(myJson));
-                            } else {
-                                console.log("Please Enter Valid 10 Digit Mobile Number ");
-                                userInput(numberOfPeople - 1)
-                            }
+            address = read.question("Enter Your Address : \n")
+            city = read.question("Enter Your City : \n")
+            let tempVar = input.data.enterString(city)
+            if (tempVar == true) {
+                state = read.question("Enter Your State : \n")
+                let temp = input.data.enterString(state)
+                if (temp == true) {
+                    zipCode = read.questionInt("Enter Zip Code : \n")
+                    if (zipCode.toString().length === 6) {
+                        phoneNumber = read.questionInt("Enter Your Phone Number : \n")
+                        if (phoneNumber.toString().length == 10) {
+                            var object = new addressbook.AddressBook(firstName, lastName, address, city, state, zipCode, phoneNumber)
+                            myJson.AddressBook.push(object)
+                            fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
+                                console.log(myJson);
+                            })
+                            console.log("Object Data : " + JSON.stringify(myJson));
                         } else {
-                            console.log("Please Enter Valid Input ");
-                            userInput(numberOfPeople - 1)
+                            console.log("Please Enter Valid 10 Digit Mobile Number ");
+                            userInput()
                         }
-                        // array.push(object)
-
                     } else {
                         console.log("Please Enter Valid Input ");
-                        userInput(numberOfPeople - 1)
+                        userInput()
                     }
+                    // array.push(object)
+
                 } else {
                     console.log("Please Enter Valid Input ");
-                    userInput(numberOfPeople - 1)
+                    userInput()
                 }
             } else {
                 console.log("Please Enter Valid Input ");
-                userInput(numberOfPeople - 1)
+                userInput()
             }
         } else {
             console.log("Please Enter Valid Input ");
-            userInput(numberOfPeople - 1)
+            userInput()
         }
+    } else {
+        console.log("Please Enter Valid Input ");
+        userInput()
     }
+
     // updateValues(array)
 }
 
@@ -91,17 +115,14 @@ function userInput(numberOfPeople) {
 //     console.log("Json Elements : " + JSON.stringify(myJson));
 // }
 
-console.log("To add some more entries -> Press 1 ");
-console.log("To delete records -> Press 2 ");
 
-var userChoice = read.questionInt();
-if (userChoice == 1) {
-    numberOfPeople = read.questionInt("Enter total number of people : ");
-    userInput(numberOfPeople)
-} else if (userChoice == 2) {
-    deleteKey = read.question("Enter First Name of the record to be deleted : \n")
-    deleteData(myJson, deleteKey)
-}
+// var userChoice = read.questionInt();
+// if (userChoice == 1) {
+//     numberOfPeople = read.questionInt("Enter total number of people : ");
+//     userInput(numberOfPeople)
+// } else if (userChoice == 2) {
+
+// }
 
 function deleteData(array, deleteKey) {
     // console.log("Array Elements " + JSON.stringify(array));
@@ -142,8 +163,8 @@ function searchRec(myJson) {
     console.log("----------------------------------------------------------------------------");
     console.log("FirstName" + " " + "LastName " + " " + "Address " + " " + "City " + " " + "State " + " " + "ZipCode " + " " + "PhoneNumber");
     console.log("----------------------------------------------------------------------------");
-//   console.log("Person Record " + personRecord);
-  
+    //   console.log("Person Record " + personRecord);
+
     for (let i = 0; i < personRecord.length; i++) {
         console.log(personRecord[i].firstName + "     " + personRecord[i].lastName + "     " + personRecord[i].address + "     " + personRecord[i].city + "     " + personRecord[i].state + "     " + personRecord[i].zipCode + "     " + personRecord[i].phoneNumber);
         console.log();

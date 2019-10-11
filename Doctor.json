@@ -1,1 +1,1 @@
-{"Doctor" : []}
+{"Doctor":[{"name":"abc","id":1,"specialization":"dtsh","availability":"am"},{"name":"abc","id":123,"specialization":"hk","availability":"pm"},{"name":"abc","id":12,"specialization":"dsgfd","availability":"am"},{"name":"qwerty","id":456,"specialization":"radfesg","availability":"am"},{"name":"qwerty","id":789,"specialization":"sdgdfsg","availability":"am"}]}

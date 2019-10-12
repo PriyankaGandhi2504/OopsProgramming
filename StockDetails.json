@@ -1,0 +1,16 @@
+{
+    "StockDetails": [
+        {
+            "name": "tcs",
+            "numberOfShares": 5,
+            "pricePerShare": 50,
+            "total": 250
+        },
+        {
+            "name": "Wipro",
+            "numberOfShares": 50,
+            "pricePerShare": 100,
+            "total": 5000
+        }
+    ]
+}

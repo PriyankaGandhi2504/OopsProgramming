@@ -11,14 +11,16 @@ const fs = require('fs')
 var addressbook = require("./AddressClass")
 addressClass = new addressbook.AddressBook
 
-var firstName; var numberOfPeople; var lastName; var address; var city;
-var state; var zipCode; var phoneNumber; var array = []; var object;
-var deleteKey; var deleteRecord; var searchRecord; var personRecord = []; var myJson;
+var firstName, numberOfPeople, lastName, address, city;
+var state, zipCode, phoneNumber, array = [], object;
+var deleteKey, deleteRecord, searchRecord, personRecord = [];
 
-function readFromFile(){
+
+
     var address = fs.readFileSync('AddressJson.json', 'utf8')
-    myJson = JSON.parse(address)
-}
+    var myJson = JSON.parse(address)
+
+
 
 displayOptions()
 
@@ -37,7 +39,7 @@ function performOperation(switchOption) {
             userInput()
             break
         case 2:
-            readFromFile()
+            display()
             console.log(myJson);
             break
         case 3:
@@ -75,11 +77,12 @@ function userInput() {
                         phoneNumber = read.questionInt("Enter Your Phone Number : \n")
                         if (phoneNumber.toString().length == 10) {
                             var object = new addressbook.AddressBook(firstName, lastName, address, city, state, zipCode, phoneNumber)
+                            // readFromFile()
                             myJson.AddressBook.push(object)
-                            fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
+                            fs.writeFileSync('AddressJson.json', JSON.stringify(myJson), (err) => {
                                 console.log(myJson);
-                            })
-                            console.log("Object Data : " + JSON.stringify(myJson));
+                            });
+                            console.log("Object Data : " + JSON.stringify(myJson))
                         } else {
                             console.log("Please Enter Valid 10 Digit Mobile Number ");
                             userInput()
@@ -106,9 +109,9 @@ function userInput() {
         console.log("Please Enter Valid Input ");
         userInput()
     }
-
-    // updateValues(array)
 }
+    // updateValues(array)
+
 
 // function updateValues(array){
 //     myJson.AddressBook.push(array)
@@ -124,6 +127,7 @@ function userInput() {
 
 // }
 
+
 function deleteData(array, deleteKey) {
     // console.log("Array Elements " + JSON.stringify(array));
     let person = array.AddressBook
@@ -137,11 +141,12 @@ function deleteData(array, deleteKey) {
         }
     }
     myJson.AddressBook.push(JSON.stringify(person))
+    fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
+
+        console.log(myJson);
+    });
 }
 
-fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
-    console.log(myJson);
-})
 
 // searchRecord = read.question("Enter keyword to search record accordingly : FirstName/LastName/City/State/ZipCode \n");
 searchRec(myJson)
@@ -159,7 +164,10 @@ function searchRec(myJson) {
 
         // 
     }
+}
 
+
+function display(){
     console.log("----------------------------------------------------------------------------");
     console.log("FirstName" + " " + "LastName " + " " + "Address " + " " + "City " + " " + "State " + " " + "ZipCode " + " " + "PhoneNumber");
     console.log("----------------------------------------------------------------------------");

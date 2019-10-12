@@ -8,6 +8,16 @@ Author Name : Priyanka Gandhi
 Date : 11/10/2019
  */
 
- const read = require("readline-sync")
- const input = require("./OopsUtility")
- var cardArray = [["Clubs", "Diamonds", "Hearts", "Spades"],["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]]
+const read = require("readline-sync")
+const input = require("./OopsUtility")
+
+
+class DeckOfCards{
+    deckOfCards(){
+        input.data.distributingCards()
+    }
+}
+module.exports = {DeckOfCards}
+
+var doc = new DeckOfCards()
+doc.deckOfCards()

@@ -6,8 +6,7 @@ class AddressBook{
         this.city = city
         this.state = state
         this.zipCode = zipCode
-        this.phoneNumber = phoneNumber
+        this.phoneNumber= phoneNumber
     }
 }
-
 module.exports = {AddressBook}

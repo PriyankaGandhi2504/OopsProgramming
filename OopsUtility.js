@@ -262,81 +262,119 @@ methods.userInput = function (userJson) {
 
 /**********Buy Shares ***********/
 methods.buyShare = function (stockJson, userJson) {
+    var val = 0;
     var stockNameOfJson = stockJson.StockDetails
     var userNameOfJson = userJson.UserDetails
-    // console.log("User Json " + JSON.stringify(userJson.UserDetails[0].amount));
+    console.log("User Json " + JSON.stringify(userNameOfJson));
     var buyerName = read.question("Enter Your Name : \n")
     if (this.enterString(buyerName)) {
         var buyerCompanyName = read.question("Which Company Share you want to buy? \n")
         if (this.enterString(buyerCompanyName)) {
             // console.log("Stock Json From Buy Shares : " + JSON.stringify(stockJson)); 
-            stockNameOfJson.forEach(element => {
-                if (element.name == buyerCompanyName) {
-                    // console.log("Buy Share Method : " + element.name);
-                    value = element
-                }
-            });
+            // stockNameOfJson.forEach(element => {
+            //     if (element.name == buyerCompanyName) 
+            //         // console.log("Buy Share Method : " + element.name);
+            //         val = element
+
+            // });
+
+            for (var key in stockNameOfJson) {
+                if (stockNameOfJson[key].name === buyerCompanyName)
+                    val = key;
+            }
 
             var buyerNoOfShares = read.questionInt("Enter Number of Shares You Want to Buy : \n")
 
-            userNameOfJson.forEach(element1 => {
-                if (element1.userName == buyerName && element1.companyName == buyerCompanyName) {
-                    element1.countOfShares = element1.countOfShares + buyerNoOfShares
-                    console.log("Element 1 of count of share " + element1.countOfShares);
-                    userJson.UserDetails.push(element1.countOfShares)
-                    // console.log("Element 1 of amount " + element1.amount);
+            for (var key1 = 0; key1 < userNameOfJson.length; key1++) {
+                if (userNameOfJson[key1].userName === buyerName) {
 
-                    // console.log("Element 2 of count of share " + element2.countOfShares);
-                }
+                    for (var key2 = 0; key2 < stockNameOfJson.length; key2++) {
+                        if (userNameOfJson[key1].companyName === buyerCompanyName) {
+                            userNameOfJson[key1].countOfShares = (userNameOfJson[key1].countOfShares) + buyerNoOfShares;
+                            userJson.UserDetails.push(userNameOfJson[key1].countOfShares)
+                        }
+                        fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
 
-                fs.writeFileSync('UserDetails.json', JSON.stringify(userJson), (err) => {
-                    console.log(userJson);
-                });
-
-            })
-
-            // console.log("User name of json amount" + userNameOfJson.amount);
-            for (let i = 0; i < JSON.stringify(userNameOfJson).length; i++) {
-                // var temp = JSON.stringify(stockNameOfJson.pricePerShare)
-                // console.log("TEMP : " + temp);
-
-                for (let j = 0; j < JSON.stringify(stockNameOfJson).length; j++) {
-                    console.log("Stack Name of Json " + JSON.stringify(stockNameOfJson.pricePerShare));
-
-                    if (userNameOfJson[i].amount > 0) {
-
-                        // console.log("Stock name of json ");
-
-                        var totalPrice = stockNameOfJson[j].pricePerShare * buyerNoOfShares
-                        console.log("Total Price : " + totalPrice);
-                        userNameOfJson[i].amount = userNameOfJson[i].amount - totalPrice
-                        console.log("Element 1 of amount : " + userNameOfJson[i].amount);
-                        // console.log("Element 1 of Amount " + element1.amount);
-                        
                     }
-                    userJson.UserDetails.push(userNameOfJson[i].amount)
+                    if (userNameOfJson[key1].amount > 0) {
+                        var TotalSharePrice = buyerNoOfShares * stockNameOfJson[0].pricePerShare;
+                        userNameOfJson[key1].amount = userNameOfJson[key1].amount - TotalSharePrice;
+                        console.log(userNameOfJson[key1].amount);
+                        userJson.UserDetails.push(userNameOfJson[key1].amount)
+                        fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
+                    }
 
-                    fs.writeFileSync('UserDetails.json', JSON.stringify(userJson), (err) => {
-                        console.log(userJson);
-                    });
-                    
                 }
-               
 
             }
+
+            if (buyerNoOfShares < stockNameOfJson[0].pricePerShare) {
+                stockNameOfJson[val].pricePerShare = stockNameOfJson[0].pricePerShare - buyerNoOfShares;
+                //console.log(StockObject[val].NoOfShares);
+                stockJson.StockDetails.push(stockNameOfJson[0].pricePerShare)
+                fs.writeFileSync("StockDetails.json", JSON.stringify(stockJson));
+            }
+
+            // userNameOfJson.forEach(element1 => {
+            //     if (element1.userName == buyerName && element1.companyName == buyerCompanyName) {
+            //         element1.countOfShares = element1.countOfShares + buyerNoOfShares
+            //         console.log("Element 1 of count of share " + element1.countOfShares);
+            //         userJson.UserDetails.push(element1.countOfShares)
+            //         // console.log("Element 1 of amount " + element1.amount);
+
+            //         // console.log("Element 2 of count of share " + element2.countOfShares);
+            //     }
+
+            //     fs.writeFileSync('UserDetails.json', JSON.stringify(userJson), (err) => {
+            //         console.log(userJson);
+            //     });
+
+            // })
+
+            // console.log("User name of json amount" + JSON.stringify(userNameOfJson));
+            // for (let i = 0; i < userNameOfJson.length; i++) {
+            // var temp = JSON.stringify(stockNameOfJson.pricePerShare)
+            // console.log("TEMP : " + temp);
+
+            // for (let j = 0; j < JSON.stringify(stockNameOfJson).length; j++) {
+            // console.log("Stack Name of Json " + JSON.stringify(stockNameOfJson.pricePerShare));
+
+            //    var temp =  parseInt(userNameOfJson[i].amount)
+            // console.log("Temp Value: " + userNameOfJson[i].amount);
+
+            // if (userNameOfJson[i].amount > 0) {
+
+            //     // console.log("Stock name of json ");
+
+            //     var totalPrice = stockNameOfJson[i].pricePerShare * buyerNoOfShares
+            //     console.log("Total Price : " + totalPrice);
+            //     userNameOfJson[i].amount = userNameOfJson[i].amount - totalPrice
+            //     console.log("Element 1 of amount : " + userNameOfJson[i].amount);
+            // console.log("Element 1 of Amount " + element1.amount);
+
+            // }
+            // userJson.UserDetails.push(userNameOfJson[i].amount)
+
+            // fs.writeFileSync('UserDetails.json', JSON.stringify(userJson), (err) => {
+            //     console.log(userJson);
+            // });
+            // // }
+
+
+            // }
 
             // stockNameOfJson = stockJson.StockDetails
             // console.log("Stock of Json " + JSON.stringify(stockNameOfJson)); 
 
-            if (buyerNoOfShares < stockNameOfJson.numberOfShares) {
-                stockNameOfJson.numberOfShares = stockNameOfJson.numberOfShares - buyerNoOfShares
-                stockNameOfJson.push(stockNameOfJson.numberOfShares)
-                console.log("Stock Details number of share " + JSON.stringify(stockJson));
-            }
+            // if (buyerNoOfShares < stockNameOfJson.numberOfShares) {
+            //     stockNameOfJson.numberOfShares = stockNameOfJson.numberOfShares - buyerNoOfShares
+            //     stockNameOfJson.push(stockNameOfJson.numberOfShares)
+            //     console.log("Stock Details number of share " + JSON.stringify(stockJson));
+            // }
 
-            fs.writeFileSync('UserDetails.json', JSON.stringify(userJson), (err) => {
-                console.log(userJson);
-            });
+            // fs.writeFileSync('UserDetails.json', JSON.stringify(userJson), (err) => {
+            //     console.log(userJson);
+            // });
 
             var date = new Date()
             var dateTime = (date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " at " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds())
@@ -350,6 +388,159 @@ methods.buyShare = function (stockJson, userJson) {
         this.buyShare(stockJson, userJson)
     }
 }
+
+
+methods.sellShare = function (stockJson, userJson) {
+    var val = 0
+    var stockNameOfJson = stockJson.StockDetails
+    var userNameOfJson = userJson.UserDetails
+    var sellerName = read.question("Enter Your Name : \n")
+    if (this.enterString(sellerName)) {
+        var sellerCompanyName = read.question("Which Company Share you want to Sell? \n")
+        if (this.enterString(sellerCompanyName)) {
+            for (var key in stockNameOfJson) {
+                if (stockNameOfJson[key].name === sellerCompanyName)
+                    val = key;
+            }
+            var sellerNumberOfShare = read.questionInt("Enter no. of share you want to sell");
+            for (var key1 = 0; key1 < userNameOfJson.length; key1++) {
+                if (userNameOfJson[key1].userName === sellerName) {
+                    for (var key2 = 0; key2 < stockNameOfJson.length; key2++) {
+                        if (userNameOfJson.companyName === sellerCompanyName) {
+                            userNameOfJson.countOfShares = (userNameOfJson[key1].countOfShares) - sellerNumberOfShare;
+                            userJson.UserDetails.push(userNameOfJson[key1].countOfShares)
+
+                        }
+                        fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
+                    }
+                    var TotalSharePrice = sellerNumberOfShare * stockNameOfJson[0].pricePerShare;
+                    userNameOfJson[key1].amount = userNameOfJson[key1].amount + TotalSharePrice;
+                    // console.log(userNameOfJson[key1].amount);
+                    userJson.UserDetails.push(userNameOfJson[key1].amount)
+                    fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
+
+                }
+
+            }
+
+            if (sellerNumberOfShare < stockNameOfJson[0].pricePerShare) {
+                stockNameOfJson[0].pricePerShare = stockNameOfJson[0].pricePerShare + sellerNumberOfShare;
+                //console.log(StockObject[val].NoOfShares);
+                stockJson.StockDetails.push(stockNameOfJson[0].pricePerShare)
+                fs.writeFileSync("StockDetails.json", JSON.stringify(stockJson));
+            }
+            var date = new Date();
+            var dateTime = (date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " at " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds())
+            console.log("Transaction done at : " + dateTime);
+        } else {
+            console.log("Please Enter Valid Input");
+            this.sellShare(stockJson, userJson)
+        }
+    } else {
+        console.log("Please Enter Valid Input");
+        this.sellShare(stockJson, userJson)
+    }
+}
+
+methods.userInputForAddress = function () {
+    var addressbook = require("./AddressClass")
+    var firstName = read.question("Enter Your First Name : \n")
+    let temp = this.enterString(firstName)
+    if (temp == true) {
+        lastName = read.question("Enter Your Last Name : \n")
+        let temp = this.enterString(lastName)
+        if (temp == true) {
+            address = read.question("Enter Your Address : \n")
+            city = read.question("Enter Your City : \n")
+            let tempVar = this.enterString(city)
+            if (tempVar == true) {
+                state = read.question("Enter Your State : \n")
+                let temp = this.enterString(state)
+                if (temp == true) {
+                    zipCode = read.questionInt("Enter Zip Code : \n")
+                    if (zipCode.toString().length === 6) {
+                        phoneNumber = read.questionInt("Enter Your Phone Number : \n")
+                        if (phoneNumber.toString().length == 10) {
+                            var object = new addressbook.AddressBook(firstName, lastName, address, city, state, zipCode, phoneNumber)
+                            // readFromFile()
+                            return object
+                            // return myJson
+                        } else {
+                            console.log("Please Enter Valid 10 Digit Mobile Number ");
+                            this.userInputForAddress()
+                        }
+                    } else {
+                        console.log("Please Enter Valid Input ");
+                        this.userInputForAddress()
+                    }
+                    // array.push(object)
+
+                } else {
+                    console.log("Please Enter Valid Input ");
+                    this.userInputForAddress()
+                }
+            } else {
+                console.log("Please Enter Valid Input ");
+                this.userInputForAddress()
+            }
+        } else {
+            console.log("Please Enter Valid Input ");
+            this.userInputForAddress()
+        }
+    } else {
+        console.log("Please Enter Valid Input ");
+        this.userInputForAddress()
+    }
+}
+
+
+methods.displayAllAddress = function (myJson) {
+
+    personRecord = myJson.AddressBook
+    for (let i = 0; i < personRecord.length; i++) {
+        for (let j = i + 1; j < personRecord.length; j++) {
+            if (personRecord[i].LastName > personRecord[j].LastName) {
+                let temp = personRecord[i]
+                personRecord[i] = personRecord[j]
+                personRecord[j] = temp
+            }
+        }
+    }
+
+    console.log("----------------------------------------------------------------------------");
+    console.log("FirstName" + " " + "LastName " + " " + "Address " + " " + "City " + " " + "State " + " " + "ZipCode " + " " + "PhoneNumber");
+    console.log("----------------------------------------------------------------------------");
+    //   console.log("Person Record " + personRecord);
+
+    for (let i = 0; i < personRecord.length; i++) {
+        console.log(personRecord[i].firstName + "     " + personRecord[i].lastName + "     " + personRecord[i].address + "     " + personRecord[i].city + "     " + personRecord[i].state + "     " + personRecord[i].zipCode + "     " + personRecord[i].phoneNumber);
+        console.log();
+    }
+
+}
+
+methods.deleteDataFromAddress = function(array, deleteKey, myJson) {
+    person = array
+    // console.log("Array Elements " + JSON.stringify(array));
+    // person = myJson.AddressBook
+    // console.log("Array Stringify " + person);
+
+    for (let i = 0; i < person.length; i++) {
+        // console.log("Array First Name " +  person[i].length);
+        if (person[i].firstName == deleteKey) {
+            // console.log("Array First Name in loop" + person[i].firstName);
+            person.splice(i, 1)
+            // console.log("Person : " + JSON.parse(person));
+            myJson.AddressBook.push(JSON.stringify(person))
+            
+        }
+    }
+    fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
+        console.log("Remaining Data " + myJson);
+        
+    });
+}
+
 
 // methods.replaceName = function (reg1, reg2, name) {
 //     var replaceName = reg2.test(reg1)

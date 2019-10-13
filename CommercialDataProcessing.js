@@ -39,6 +39,7 @@ class StockAccount {
                 input.data.buyShare(stockJson, userJson)
                 break
             case 4:
+                input.data.sellShare(stockJson, userJson)
                 break
             case 5:
                 console.log("File Data : " + JSON.stringify(stockJson));

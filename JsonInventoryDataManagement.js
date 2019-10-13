@@ -40,34 +40,47 @@ function performOperation(inventoryNumber) {
     switch (inventoryNumber) {
         case 1:
             dummyvariable = "Rice"
-            console.log("Enter number of entries");
-            numberOfEntries = read.questionInt()
-            for (let i = 0; i < numberOfEntries; i++) {
-                array[i] = userInput(dummyvariable)
-                // myJson.Rice.push(array)
-            }
+            // console.log("Enter number of entries");
+            // numberOfEntries = read.questionInt()
+            // for (let i = 0; i < numberOfEntries; i++) {
+                array = userInput(dummyvariable)
+                myJson.Rice.push(array)
+                fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
+                    console.log(myJson);
+                })
+            // }
             // console.log("Inventory : " + JSON.stringify(myJson));
 
             break
         case 2:
             dummyvariable = "Pulses"
-            console.log("Enter number of entries");
-            numberOfEntries = read.questionInt()
-            for (let i = 0; i < numberOfEntries; i++) {
-                array[i] = userInput(dummyvariable)
+            // console.log("Enter number of entries");
+            // numberOfEntries = read.questionInt()
+            // for (let i = 0; i < numberOfEntries; i++) {
+                array = userInput(dummyvariable)
+                myJson.Pulses.push(array)
+                fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
+                    console.log(myJson);
+                    
+                })
                 // myJson.Rice.push(array)
-            }
+            // }
             console.log("Inventory : " + JSON.stringify(myJson));
 
             break
         case 3:
             dummyvariable = "Wheats"
-            console.log("Enter number of entries");
-            numberOfEntries = read.questionInt()
-            for (let i = 0; i < numberOfEntries; i++) {
-                array[i] = userInput(dummyvariable)
+            // console.log("Enter number of entries");
+            // numberOfEntries = read.questionInt()
+            // for (let i = 0; i < numberOfEntries; i++) {
+                array = userInput(dummyvariable)
+                myJson.Wheats.push(array)
+                fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
+                    console.log(myJson);
+                    
+                })
                 // myJson.Rice.push(array)
-            }
+            // }
             console.log("Inventory : " + JSON.stringify(myJson));
             break
         default:

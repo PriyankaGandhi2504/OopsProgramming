@@ -40,31 +40,21 @@ function performOperation(inventoryNumber) {
     switch (inventoryNumber) {
         case 1:
             dummyvariable = "Rice"
-            // console.log("Enter number of entries");
-            // numberOfEntries = read.questionInt()
-            // for (let i = 0; i < numberOfEntries; i++) {
                 array = userInput(dummyvariable)
-                myJson.Rice.push(array)
-                fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
-                    console.log(myJson);
-                })
-            // }
-            // console.log("Inventory : " + JSON.stringify(myJson));
+                // console.log("Array of rice" + JSON.stringify(array));
+                // myJson.Rice.push(array)
+                // fs.writeFileSync('Inventory.json',JSON.stringify(myJson));
+                    // console.log(myJson);
+                // })
 
             break
         case 2:
             dummyvariable = "Pulses"
-            // console.log("Enter number of entries");
-            // numberOfEntries = read.questionInt()
-            // for (let i = 0; i < numberOfEntries; i++) {
                 array = userInput(dummyvariable)
-                myJson.Pulses.push(array)
-                fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
-                    console.log(myJson);
-                    
-                })
-                // myJson.Rice.push(array)
-            // }
+                // myJson.Pulses.push(array)
+                // fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
+                //     console.log(myJson);
+                // })
             console.log("Inventory : " + JSON.stringify(myJson));
 
             break
@@ -74,11 +64,11 @@ function performOperation(inventoryNumber) {
             // numberOfEntries = read.questionInt()
             // for (let i = 0; i < numberOfEntries; i++) {
                 array = userInput(dummyvariable)
-                myJson.Wheats.push(array)
-                fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
-                    console.log(myJson);
+                // myJson.Wheats.push(array)
+                // fs.writeFileSync('Inventory.json',JSON.stringify(myJson),(err) => {
+                //     console.log(myJson);
                     
-                })
+                // })
                 // myJson.Rice.push(array)
             // }
             console.log("Inventory : " + JSON.stringify(myJson));
@@ -99,7 +89,7 @@ function userInput(dummyvariable) {
     console.log("Enter " + dummyvariable + " Name ");
     name = read.question()
     array.push(name)
-    console.log("Enter " + dummyvariable + " weight ");
+    console.log("Enter " + dummyvariable + " Weight ");
     weight = read.questionInt()
     array.push(weight)
     console.log("Enter price per Kg ");
@@ -108,8 +98,7 @@ function userInput(dummyvariable) {
     total = weight * pricePerKg
     array.push(total)
     // total = rice.totalQuantity(weight, pricePerKg)
-    updateValues(dummyvariable, array)
-
+    return updateValues(dummyvariable, array)
 }
 
 function updateValues(dummyvariable, array) {
@@ -120,12 +109,16 @@ function updateValues(dummyvariable, array) {
             display = new riceClass.Rice(array[0], array[1], array[2], array[3])
             myJson.Rice.push(display)
             // myJson.Rice.push(total)
+            fs.writeFileSync('Inventory.json',JSON.stringify(myJson));
             console.log("Inventory : " + JSON.stringify(myJson));
+
+            // JSON.stringify(myJson)
             // console.log("Array " + JSON.stringify(display) + " " + "Total Quantity " + total);
             break
         case "Wheats":
             display = new wheatClass.Wheats(array[0], array[1], array[2], array[3])
             myJson.Wheats.push(display)
+            fs.writeFileSync('Inventory.json',JSON.stringify(myJson));
             // myJson.Rice.push(total)
             console.log("Inventory : " + JSON.stringify(myJson));
             // console.log("Array " + display + " " + "Total Quantity " + total);
@@ -133,6 +126,7 @@ function updateValues(dummyvariable, array) {
         case "Pulses":
             display = new pulseClass.Pulses(array[0], array[1], array[2], array[3])
             myJson.Pulses.push(display)
+            fs.writeFileSync('Inventory.json',JSON.stringify(myJson));
             // myJson.Rice.push(total)
             console.log("Inventory : " + JSON.stringify(myJson));
             // console.log("Array " + display + " " + "Total Quantity " + total);

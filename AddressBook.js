@@ -14,6 +14,8 @@ var myJson = JSON.parse(address)
 
 var array = []
 array = myJson.AddressBook
+
+
 class AddressBook {
     displayOptions() {
         console.log("Select an Option ");
@@ -28,6 +30,8 @@ class AddressBook {
         switch (switchOption) {
             case 1:
                 var object = input.data.userInputForAddress()
+                console.log("Object from case " + JSON.stringify(object));
+                
                 myJson.AddressBook.push(object)
                 fs.writeFileSync('AddressJson.json', JSON.stringify(myJson), (err) => {
                     console.log(myJson);
@@ -39,9 +43,24 @@ class AddressBook {
                 console.log(myJson);
                 break
             case 3:
-                var deleteKey = read.question("Enter First Name of the record to be deleted : \n")
-                console.log("Array Size : " + array.length);
-                input.data.deleteDataFromAddress(array, deleteKey, myJson)
+                addressbook.deleteDataFromAddress()
+                // var deleteKey = read.question("Enter First Name of the record to be deleted : \n")
+                // for (let i = 0; i < array.length; i++) {
+                //     if (array[i].firstName === deleteKey) {
+                // console.log("Array First Name in loop" + person[i].firstName);
+                // myJson.AddressBook = array.splice(i, 1)
+                // console.log("Addresses : " + JSON.stringify(array));
+                // myJson.AddressBook.push(array)
+
+                // console.log("Display json "+ (myJson));
+                // addressbook.writeToFile(array)
+
+                // addressbook.writeToFile(myJson)
+                //     }
+                // fs.writeFile('AddressJson.json',JSON.stringify(myJson), (err) => {
+                //     console.log(myJson);
+                // });
+                // }
                 break
             default:
                 console.log("Invalid Input");
@@ -51,6 +70,30 @@ class AddressBook {
             this.displayOptions()
         }
     }
+
+    deleteDataFromAddress() {
+        console.log("Array Json " + JSON.stringify(array));
+        var deleteKey = read.question("Enter First Name of the record to be deleted : \n")
+        console.log("Array Size : " + (array.length));
+        myJson.AddressBook = array.filter((user) => {
+            return user.firstName !== deleteKey
+        })
+        console.log("Array Json after deletion " + JSON.stringify(myJson));
+        // myJson.AddressBook.push(array)
+        fs.writeFileSync('AddressJson.json', JSON.stringify(myJson), (err) => {
+            console.log(myJson);
+        });
+
+    }
+
+
+    // writeToFile(dummy) {
+    //     fs.writeFile('AddressJson.json', dummy, (err) => {
+    //         console.log("Remaining Data " + myJson);
+    //     });
+    // }
+
+
 }
 module.exports = { AddressBook }
 
@@ -58,6 +101,9 @@ var addressbook = new AddressBook
 addressbook.displayOptions()
 
 
+    //   fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
+    //         console.log("Remaining Data " + myJson);
+    //     });
    // person.forEach(element => {
     //     if(element.FirstName === deleteKey){
     //         console.log("Element " + element.FirstName);

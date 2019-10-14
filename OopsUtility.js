@@ -37,6 +37,96 @@ methods.enterString = function (str) {
     }
 }
 
+methods.validateName = function(reg1){
+    var reg2 = /<<name>>/
+    var reg3 = /^[A-z]+/
+    var nameValue = reg2.test(reg1)
+    // var nameValue = input.data.replaceName(reg1, reg2, name)
+    if (nameValue == true) {
+        console.log("Please Enter your Name: ");
+        var name = read.question()
+        var userValue = reg3.test(name)
+        if (userValue == true) {
+            reg1 = reg1.replace(reg2, name)
+        }else{
+            console.log("Please enter valid input ");
+            this.validateName(reg1)
+        }
+    }else{
+        console.log("Please enter valid input ");
+        this.validateName(reg1)
+    }
+    console.log(reg1);
+    return reg1
+}
+
+methods.validateFullName = function(reg1){
+    var reg4 = /<<full name>>/
+    var reg5 = /^[a-zA-Z ]{2,30}$/
+    // var reg5 = /(^[A-z]+)\s(^[A-z]+)/
+    var fullNameValue = reg4.test(reg1)
+    if (fullNameValue == true) {
+        console.log("Please Enter Your Full Name : ");
+        var fullName = read.question()
+        var userValue = reg5.test(fullName)
+        console.log("UserValue " + userValue);
+        if (userValue == true) {
+            reg1 = reg1.replace(reg4, fullName)
+        }else{
+            console.log("Please enter valid input ");
+            this.validateFullName(reg1)
+        }
+    }else{
+        console.log("Please enter valid input ");
+        this.validateFullName(reg1)
+    }
+    console.log(reg1);
+    return reg1
+}
+
+methods.validateNumber = function(reg1){
+    var reg6 = /\xxxxxxxxxx/
+    var reg7 = /^[0]?[789]\d{9}$/
+    var mobileNumberValue = reg6.test(reg1)
+    if (mobileNumberValue == true) {
+        console.log("Enter 10 digit mobile number starting from 7/8/9");
+        var mobileNumber = []
+        mobileNumber = read.questionInt()
+        let userValue = reg7.test(mobileNumber)
+        if (userValue == true) {
+            reg1 = reg1.replace(reg6, mobileNumber)
+        }else{
+            console.log("Please enter valid input ");
+            this.validateNumber(reg1)
+        }
+    }else{
+        console.log("Please enter valid input ");
+        this.validateFullName(reg1)
+    }
+    console.log(reg1);
+    return reg1
+}
+
+methods.validateDate = function(reg1){
+    var testdate = /([0-9]+)-([0-9]+)-([0-9]+)/
+    var replaceDate = testdate.test(reg1)
+    if (replaceDate == true) {
+    
+        var date = new Date()
+        var currentDate = date.getDate()
+        var currentMonth = date.getMonth() + 1
+        var currentYear = date.getFullYear()
+        reg1 = reg1.replace(testdate, currentDate + "-" + currentMonth + "-" + currentYear)
+    }else{
+        console.log("Please enter valid input ");
+        this.validateDate(reg1)
+    }
+    console.log(reg1);
+    return reg1
+    
+}
+
+/**Write Function **/
 methods.writeToFile = function () {
     fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
         console.log(myJson);
@@ -53,12 +143,19 @@ methods.doctorUserInput = function () {
         var specialization = read.question("Enter Doctor's Specialization :-> ")
         if (this.enterString(specialization)) {
             var availability = read.question("Enter Doctor's Availability : -> ")
-            var object = new doctorClassTemp.Doctor(name, id, specialization, availability)
-            doctorJson.Doctor.push(object)
-            fs.writeFileSync('Doctor.json', JSON.stringify(doctorJson), (err) => {
-                console.log(doctorJson);
-            })
-            console.log("Doctor Json Data From utility " + JSON.stringify(doctorJson));
+            var appointmentCounter = read.questionInt("Enter Number of Appointments Scheduled")
+            if (appointmentCounter > 0 && appointmentCounter <= 5) {
+                var object = new doctorClassTemp.Doctor(name, id, specialization, availability, appointmentCounter)
+                doctorJson.Doctor.push(object)
+                fs.writeFileSync('Doctor.json', JSON.stringify(doctorJson), (err) => {
+                    console.log(doctorJson);
+                })
+                console.log("Doctor Json Data From utility " + JSON.stringify(doctorJson));
+            }else{
+                console.log("Each Doctor should have maximum 5 appointments per day \n Please Enter Valid Input");
+                var appointmentPerDay = read.questionInt()
+                this.doctorUserInput()   
+            }
         } else {
             console.log("Please Enter Valid Input : ");
             this.doctorUserInput()
@@ -156,6 +253,45 @@ methods.searchPatient = function (patientInfo) {
             console.log("Patient's Details " + JSON.stringify(patientDetail[i]))
         }
     }
+}
+
+methods.scheduleAppointment = function (counter, doctorName) {
+    // const appointment = fs.readFileSync('AppointmentJson.json', 'utf8')
+    // var scheduledAppointments = JSON.parse(appointment)
+    // var array = []
+    // console.log("Doctor Name " + doctorName);
+
+    for (let i = 0; i < doctorJson.Doctor.length; i++) {
+
+
+        if (doctorJson.Doctor[i].name === doctorName) {
+            // console.log("Loop values " + doctorJson.Doctor[i].name);
+
+            if (doctorJson.Doctor[i].appointmentCounter >= 5) {
+                // console.log("inside loop");
+                var date = new Date()
+                var currentDate = date.getDate() + 1
+                var currentMonth = date.getMonth() + 1
+                var currentYear = date.getFullYear()
+                console.log("Appointment will be scheduled for Tomorrow " + currentDate + "/" + currentMonth + "/" + currentYear);
+                var scheduleOption = read.questionInt("To continue Press 2 : \n");
+                if (scheduleOption == 2) {
+                    console.log("Appointment scheduled");
+                }
+            }else{
+                console.log("Appointment Scheduled ");
+                doctorJson.Doctor[i].appointmentCounter = doctorJson.Doctor[i].appointmentCounter + 1
+                console.log("doctorJson.Doctor[i].appointmentCounter : " + doctorJson.Doctor[i].appointmentCounter);
+                doctorJson.Doctor.push(doctorJson.Doctor[i].appointmentCounter)
+                fs.writeFileSync('Doctor.json',JSON.stringify(doctorJson));
+                // scheduledAppointments.Appointment.push(JSON.stringify(doctorJson))
+                // // scheduledAppointments.Appointment.push(doctorJson)
+                // fs.writeFileSync('Appointment.json',JSON.stringify(scheduledAppointments));
+                
+            }
+        }
+    }
+    // console.log("doctorJson.Doctor.name " + doctorJson.Doctor.length);
 }
 
 methods.readFile = function (path) {
@@ -285,33 +421,32 @@ methods.buyShare = function (stockJson, userJson) {
 
             var buyerNoOfShares = read.questionInt("Enter Number of Shares You Want to Buy : \n")
 
-            for (var key1 = 0; key1 < userNameOfJson.length; key1++) {
+            for (var key1 = 0; key1 < userNameOfJson.length-1; key1++) {
                 if (userNameOfJson[key1].userName === buyerName) {
 
-                    for (var key2 = 0; key2 < stockNameOfJson.length; key2++) {
-                        if (userNameOfJson[key1].companyName === buyerCompanyName) {
-                            userNameOfJson[key1].countOfShares = (userNameOfJson[key1].countOfShares) + buyerNoOfShares;
-                            userJson.UserDetails.push(userNameOfJson[key1].countOfShares)
-                        }
-                        fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
-
+                for (var key2 = 0; key2 < userNameOfJson.length-1; key2++) {
+                    if (userNameOfJson[key2].companyName === buyerCompanyName) {
+                        userNameOfJson[key2].countOfShares = (userNameOfJson[key2].countOfShares) + buyerNoOfShares;
+                        // userJson.UserDetails.push(userNameOfJson[key1].countOfShares)
+                        // console.log("userNameOfJson[key1].countOfShares " + userNameOfJson[key1].countOfShares);    
                     }
-                    if (userNameOfJson[key1].amount > 0) {
-                        var TotalSharePrice = buyerNoOfShares * stockNameOfJson[0].pricePerShare;
-                        userNameOfJson[key1].amount = userNameOfJson[key1].amount - TotalSharePrice;
-                        console.log(userNameOfJson[key1].amount);
-                        userJson.UserDetails.push(userNameOfJson[key1].amount)
-                        fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
-                    }
+                    fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
 
                 }
-
+                if (userNameOfJson[key1].amount > 0) {
+                    var TotalSharePrice = buyerNoOfShares * stockNameOfJson[0].pricePerShare;
+                    userNameOfJson[key1].amount = userNameOfJson[0].amount - TotalSharePrice;
+                    // console.log(userNameOfJson[key1].amount);
+                    // userJson.UserDetails.push(userNameOfJson[key1].amount)
+                    fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
+                }
+             }
             }
 
             if (buyerNoOfShares < stockNameOfJson[0].pricePerShare) {
-                stockNameOfJson[val].pricePerShare = stockNameOfJson[0].pricePerShare - buyerNoOfShares;
+                stockNameOfJson[val].numberOfShares = stockNameOfJson[0].numberOfShares - buyerNoOfShares;
                 //console.log(StockObject[val].NoOfShares);
-                stockJson.StockDetails.push(stockNameOfJson[0].pricePerShare)
+                // stockJson.StockDetails.push(stockNameOfJson[0].numberOfShares)
                 fs.writeFileSync("StockDetails.json", JSON.stringify(stockJson));
             }
 
@@ -403,30 +538,30 @@ methods.sellShare = function (stockJson, userJson) {
                     val = key;
             }
             var sellerNumberOfShare = read.questionInt("Enter no. of share you want to sell");
-            for (var key1 = 0; key1 < userNameOfJson.length; key1++) {
+            for (var key1 = 0; key1 < userNameOfJson.length-1; key1++) {
                 if (userNameOfJson[key1].userName === sellerName) {
-                    for (var key2 = 0; key2 < stockNameOfJson.length; key2++) {
-                        if (userNameOfJson.companyName === sellerCompanyName) {
-                            userNameOfJson.countOfShares = (userNameOfJson[key1].countOfShares) - sellerNumberOfShare;
-                            userJson.UserDetails.push(userNameOfJson[key1].countOfShares)
+                    for (var key2 = 0; key2 < userNameOfJson.length-1; key2++) {
+                        if (userNameOfJson[key2].companyName === sellerCompanyName) {
+                            userNameOfJson[key2].countOfShares = (userNameOfJson[key2].countOfShares) - sellerNumberOfShare;
+                            // userJson.UserDetails.push(userNameOfJson[key1].countOfShares)
 
                         }
                         fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
                     }
-                    var TotalSharePrice = sellerNumberOfShare * stockNameOfJson[0].pricePerShare;
+                    var TotalSharePrice = sellerNumberOfShare * stockNameOfJson[key1].pricePerShare;
                     userNameOfJson[key1].amount = userNameOfJson[key1].amount + TotalSharePrice;
                     // console.log(userNameOfJson[key1].amount);
-                    userJson.UserDetails.push(userNameOfJson[key1].amount)
+                    // userJson.UserDetails.push(userNameOfJson[key1].amount)
                     fs.writeFileSync("UserDetails.json", JSON.stringify(userJson));
 
                 }
 
             }
 
-            if (sellerNumberOfShare < stockNameOfJson[0].pricePerShare) {
-                stockNameOfJson[0].pricePerShare = stockNameOfJson[0].pricePerShare + sellerNumberOfShare;
+            if (sellerNumberOfShare < stockNameOfJson[0].numberOfShares) {
+                stockNameOfJson[0].numberOfShares = stockNameOfJson[0].numberOfShares + sellerNumberOfShare;
                 //console.log(StockObject[val].NoOfShares);
-                stockJson.StockDetails.push(stockNameOfJson[0].pricePerShare)
+                // stockJson.StockDetails.push(stockNameOfJson[0].numberOfShares)
                 fs.writeFileSync("StockDetails.json", JSON.stringify(stockJson));
             }
             var date = new Date();
@@ -499,7 +634,7 @@ methods.displayAllAddress = function (myJson) {
     personRecord = myJson.AddressBook
     for (let i = 0; i < personRecord.length; i++) {
         for (let j = i + 1; j < personRecord.length; j++) {
-            if (personRecord[i].LastName > personRecord[j].LastName) {
+            if (personRecord[i].lastName > personRecord[j].lastName) {
                 let temp = personRecord[i]
                 personRecord[i] = personRecord[j]
                 personRecord[j] = temp
@@ -519,27 +654,29 @@ methods.displayAllAddress = function (myJson) {
 
 }
 
-methods.deleteDataFromAddress = function(array, deleteKey, myJson) {
-    person = array
-    // console.log("Array Elements " + JSON.stringify(array));
-    // person = myJson.AddressBook
-    // console.log("Array Stringify " + person);
+// methods.deleteDataFromAddress = function(array, deleteKey, myJson) {
+//     person = array
+//     var arrayDemo = []
+//     // console.log("Array Elements " + JSON.stringify(per));
+//     for(let i = 0 ; i < JSON.stringify(myJson.AddressBook).length; i++){
+//         arrayDemo[i] = myJson.AddressBook[i]
+//     }
 
-    for (let i = 0; i < person.length; i++) {
-        // console.log("Array First Name " +  person[i].length);
-        if (person[i].firstName == deleteKey) {
-            // console.log("Array First Name in loop" + person[i].firstName);
-            person.splice(i, 1)
-            // console.log("Person : " + JSON.parse(person));
-            myJson.AddressBook.push(JSON.stringify(person))
-            
-        }
-    }
-    fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
-        console.log("Remaining Data " + myJson);
-        
-    });
-}
+//     console.log("Array Demo " + arrayDemo);
+
+//     for (let i = 0; i < person.length; i++) {
+//         console.log("Array First Name " +  person[i].firstName);
+//         if (person[i].firstName == deleteKey) {
+//             // console.log("Array First Name in loop" + person[i].firstName);
+//             JSON.stringify(person).splice(i, 1)
+//             console.log("Person : " + JSON.parse(person));
+//             myJson.AddressBook.push(JSON.stringify(person))
+//         }
+//     }
+//     fs.writeFile('AddressJson.json', JSON.stringify(myJson), (err) => {
+//         console.log("Remaining Data " + myJson);        
+//     });
+// }
 
 
 // methods.replaceName = function (reg1, reg2, name) {

@@ -29,7 +29,7 @@ var doctorJson; var patientJson;
 
 readFromFile()
 
-function readFromFile(){
+function readFromFile() {
     var doctor = fs.readFileSync('Doctor.json', 'utf8')
     doctorJson = JSON.parse(doctor)
     var patient = fs.readFileSync('Patient.json', 'utf8')
@@ -38,7 +38,7 @@ function readFromFile(){
 
 
 var doctorDetailsArray; var patientDetailsArray; var patientArray = []
-var switchOption
+var switchOption, counter = 0
 
 displayOptions()
 
@@ -73,14 +73,18 @@ function performOperation(switchOption) {
             console.log(JSON.stringify(patientJson));
             break
         case 5:
-                var doctorInfo = read.question("Enter Doctor's Name/Id/Specialization to schedule an appointment : \n");
-                input.data.allocateDoctor(doctorInfo)
+            var doctorInfo = read.question("Enter Doctor's Name/Id/Specialization to schedule an appointment : \n");
+            input.data.allocateDoctor(doctorInfo)
             break
         case 6:
             var patientInfo = read.question("Enter Patient's Name/Id/MobileNumber to search details : \n")
             input.data.searchPatient(patientInfo)
             break
         case 7:
+            var doctorName = read.question("Enter Doctors Name to check for appointment : \n")
+            if(input.data.enterString(doctorName)){
+                count = input.data.scheduleAppointment(counter, doctorName)
+            }
             break
         default:
             console.log("Invalid Input");

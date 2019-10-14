@@ -1,1 +1,22 @@
-{"Patient":[{"name":"abc","id":1,"mobileNumber":2013456789,"age":12}]}
+{
+    "Patient": [
+        {
+            "name": "abc",
+            "id": 1,
+            "mobileNumber": 2013456789,
+            "age": 12
+        },
+        {
+            "name": "pihu",
+            "id": 12,
+            "mobileNumber": 9630124578,
+            "age": 23
+        },
+        {
+            "name": "mnpsa",
+            "id": 42,
+            "mobileNumber": 9632014587,
+            "age": 12
+        }
+    ]
+}

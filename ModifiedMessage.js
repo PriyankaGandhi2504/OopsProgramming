@@ -21,60 +21,22 @@ const input = require("./OopsUtility")
 const read = require("readline-sync")
 
 var reg1 = "Hello <<name>> , We have your fullname as <<full name>> in our system, Your contact number is 91-xxxxxxxxxx . Please,let us know in case of any clarification Thank you BridgeLabz 01-01-2016"
-var reg2 = /<<name>>/
-var reg3 = /^[A-z]+/
-var nameValue = reg2.test(reg1)
-// var nameValue = input.data.replaceName(reg1, reg2, name)
-if (nameValue == true) {
-    console.log("Please Enter your Name:  ");
-    var name = read.question()
-    var userValue = reg3.test(name)
-    if (userValue == true) {
-        reg1 = reg1.replace(reg2, name)
-    }
-}
-console.log(reg1);
-
-var reg4 = /<<full name>>/
-var reg5 = /(^[A-z]+)\s(^[A-z]+)/
-var fullNameValue = reg4.test(reg1)
-if (fullNameValue == true) {
-    console.log("Please Enter Your Full Name : ");
-    var fullName = read.question()
-    let userValue = reg5.test(fullName)
-    if (userValue == true) {
-        reg1 = reg1.replace(reg4, fullName)
-    }
-}
-console.log(reg1);
+reg1 = input.data.validateName(reg1)
+// console.log(reg1);
+reg1 = input.data.validateFullName(reg1)
+// console.log(reg1);
+reg1 = input.data.validateNumber(reg1)
+// console.log(reg1);
+reg1 = input.data.validateDate(reg1)
+// console.log(reg1);
 
 
-var reg6 = /\xxxxxxxxxx/
-var reg7 = /^[0]?[789]\d{9}$/
-var mobileNumberValue = reg6.test(reg1)
-if (mobileNumberValue == true) {
-    console.log("Please enter mobile number");
-    var mobileNumber = []
-    mobileNumber = read.questionInt()
-    let userValue = reg7.test(mobileNumber)
-    if(userValue == true){
-        reg1 = reg1.replace(reg6, mobileNumber)
-    }
-}
-console.log(reg1);
 
 
-var testdate = /([0-9]+)-([0-9]+)-([0-9]+)/
-var replaceDate = testdate.test(reg1)
-    if (replaceDate == true) {
 
-        var date = new Date()
-        var currentDate = date.getDate()
-        var currentMonth = date.getMonth() + 1
-        var currentYear = date.getFullYear()
-        reg1 = reg1.replace(testdate, currentDate + "-" + currentMonth + "-" + currentYear)
-    }
-console.log(reg1);
+
+
+
 
 // // var testFullNameInput = console.log(reg3.test(reg1));
 

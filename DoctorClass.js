@@ -1,11 +1,12 @@
 // const patentVar = require("./PatientClass")
 
 class Doctor{
-    constructor(name, id, specialization, availability){
+    constructor(name, id, specialization, availability, appointmentCounter){
         this.name = name
         this.id = id
         this.specialization = specialization
         this.availability = availability
+        this.appointmentCounter = appointmentCounter
     }
     
 }
